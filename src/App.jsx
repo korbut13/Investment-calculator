@@ -4,8 +4,6 @@ import Header from "./components/Header";
 import UserInput from "./components/User-input";
 import Results from "./components/Results";
 
-import { calculateInvestmentResults } from "./util/investment";
-
 const INITIAL_VALUES = {
   initialInvestment: 15000,
   annualInvestment: 900,
@@ -15,11 +13,12 @@ const INITIAL_VALUES = {
 
 function App() {
   const [currentValues, setCurrentValues] = useState(INITIAL_VALUES);
-  const results = calculateInvestmentResults(currentValues);
+  let isValidInputs = true;
+
+  if(currentValues.duration <=0) isValidInputs = false;
 
   function handleNewInput(parametrName, newValue){
-    console.log("value", newValue)
-    setCurrentValues(prevValues => {
+      setCurrentValues(prevValues => {
       return {
         ...prevValues,
         [parametrName]:newValue
@@ -31,9 +30,9 @@ function App() {
     <>
       <Header/>
       <UserInput initialValues={currentValues} handleNewInput={handleNewInput}/>
-      <Results results={results} initialInvestment={currentValues.initialInvestment} annualInvestment={currentValues.annualInvestment}/>
+      {!isValidInputs && <p className="center">Put a valid duration data</p>}
+      {isValidInputs && <Results currentValues={currentValues}/>}
     </>
-
   )
 }
 
